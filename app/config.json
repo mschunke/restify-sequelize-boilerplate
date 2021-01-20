@@ -1,4 +1,8 @@
 {
   "accessSecret": "pst@changeme",
-  "refreshSecret": "change@me@too"
+  "accessExp": "15m",
+  "accessAlgo": "HS256",
+  "refreshSecret": "change@me@too",
+  "refreshExp": "8w",
+  "refreshAlgo": "HS512"
 }

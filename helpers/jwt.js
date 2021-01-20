@@ -2,11 +2,11 @@ const config = require('../app/config.json');
 const jwt = require('jsonwebtoken');
 
 function signAccessToken(email) {
-  return jwt.sign({ email }, config.accessSecret, { expiresIn: '15m', algorithm: 'HS256' } )
+  return jwt.sign({ email }, config.accessSecret, { expiresIn: config.accessExp, algorithm: config.accessAlgo } )
 }
 
 function signRefreshToken(email) {
-  return jwt.sign({ email }, config.refreshSecret, { expiresIn: '8w', algorithm: 'HS512' } )
+  return jwt.sign({ email }, config.refreshSecret, { expiresIn: config.refreshExp, algorithm: config.refreshAlgo } )
 }
 
 function refreshTokens(token) {
