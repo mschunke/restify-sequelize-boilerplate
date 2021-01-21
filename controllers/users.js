@@ -33,9 +33,7 @@ async function getUser(req, res) {
       email,
       id: userId,
     }
-    console.log(query)
     Object.keys(query).forEach(k => query[k] === undefined && delete query[k])
-    console.log(query)
     const data = await UsersDao.findUser(query, { attributes: ['id', 'email', 'firstName', 'lastName'] })
 
     res.send({
@@ -47,7 +45,72 @@ async function getUser(req, res) {
   }
 }
 
+async function getUsers(req, res) {
+  try {
+    const { query } = req.query;
+
+    const data = await UsersDao.findUsers(query, { attributes: ['id', 'email', 'firstName', 'lastName'] })
+
+    res.send({
+      success: true,
+      data
+    })
+  } catch (error) {
+    APIError(res, 'USER_FIND_ERROR', error.message)
+  }
+}
+
+async function getAndCountUsers(req, res) {
+  try {
+    const { query, limit, offset } = req.query;
+
+    const queryObj = JSON.parse(query)
+    const data = await UsersDao.findAndCountUsers(limit, offset, queryObj, { attributes: ['id', 'email', 'firstName', 'lastName'] })
+
+    res.send({
+      success: true,
+      data
+    })
+  } catch (error) {
+    APIError(res, 'USER_FIND_ERROR', error.message)
+  }
+}
+
+async function updateUser(req, res) {
+  try {
+    const { userId, updUser } = req.body;
+
+    const data = await UsersDao.updateUser({ id: userId }, updUser)
+
+    res.send({
+      success: true,
+      data
+    })
+  } catch (error) {
+    APIError(res, 'USER_UPDATE_ERROR', error.message)
+  }
+}
+
+async function deleteUser(req, res) {
+  try {
+    const { userId } = req.body;
+
+    const data = await UsersDao.deleteUser({ id: userId })
+
+    res.send({
+      success: true,
+      data
+    })
+  } catch (error) {
+    APIError(res, 'USER_DELETE_ERROR', error.message)
+  }
+}
+
 module.exports = {
   createUser,
   getUser,
+  getUsers,
+  getAndCountUsers,
+  updateUser,
+  deleteUser,
 }
