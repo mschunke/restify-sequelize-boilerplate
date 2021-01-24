@@ -15,8 +15,10 @@ async function login(req, res, next) {
       return
     } 
 
-    const accessToken = signAccessToken(email)
-    const refreshToken = signRefreshToken(email)
+    const uuid = user.uuid
+
+    const accessToken = signAccessToken(uuid)
+    const refreshToken = signRefreshToken(uuid)
 
     res.send({
       success: true,

@@ -1,17 +1,20 @@
 const bcrypt = require('bcrypt')
 
+const { generateUuid, checkUuid } = require('../helpers/uuid');
 const UsersDao = require('../database/dao/users')
 const { APIError } = require('../middleware/apiError');
 
 async function createUser(req, res) {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, uuid } = req.body;
 
   try {
     const passwordHash = await bcrypt.hash(password, 10)
+    const uuidStr = generateUuid(email)
     const newUser = {
       firstName,
       lastName,
       email,
+      uuid: uuidStr,
       password: passwordHash
     }
 
@@ -49,7 +52,7 @@ async function getUsers(req, res) {
   try {
     const { query } = req.query;
 
-    const data = await UsersDao.findUsers(query, { attributes: ['id', 'email', 'firstName', 'lastName'] })
+    const data = await UsersDao.findUsers(query || {}, { attributes: ['id', 'email', 'firstName', 'lastName'] })
 
     res.send({
       success: true,
@@ -64,7 +67,8 @@ async function getAndCountUsers(req, res) {
   try {
     const { query, limit, offset } = req.query;
 
-    const queryObj = JSON.parse(query)
+    const queryJSON = query ? JSON.query(query) : {}
+    const queryObj = queryJSON
     const data = await UsersDao.findAndCountUsers(limit, offset, queryObj, { attributes: ['id', 'email', 'firstName', 'lastName'] })
 
     res.send({

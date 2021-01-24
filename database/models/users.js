@@ -9,10 +9,16 @@ module.exports = sequelize => {
       field: 'id',
       primaryKey: true,
     },
+    uuid: {
+      type: DataTypes.STRING,
+      unique: true,
+      field: 'str_uuid',
+      allowNull: false,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'email',
+      unique: true,
       field: 'str_email'
     },
     firstName: {
@@ -32,5 +38,16 @@ module.exports = sequelize => {
     }
   }, {
     tableName: 'users',
+    indexes: [
+      {
+        name: 'uniq_email',
+        fields: ['str_email'],
+        unique: true,
+      }, {
+        name: 'uniq_uuid',
+        fields: ['str_uuid'],
+        unique: true,
+      }
+    ]
   })
 }

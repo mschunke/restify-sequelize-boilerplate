@@ -1,22 +1,22 @@
 const config = require('../app/config.json');
 const jwt = require('jsonwebtoken');
 
-function signAccessToken(email) {
-  return jwt.sign({ email }, config.accessSecret, { expiresIn: config.accessExp, algorithm: config.accessAlgo } )
+function signAccessToken(uuid) {
+  return jwt.sign({ uuid }, config.accessSecret, { expiresIn: config.accessExp, algorithm: config.accessAlgo } )
 }
 
-function signRefreshToken(email) {
-  return jwt.sign({ email }, config.refreshSecret, { expiresIn: config.refreshExp, algorithm: config.refreshAlgo } )
+function signRefreshToken(uuid) {
+  return jwt.sign({ uuid }, config.refreshSecret, { expiresIn: config.refreshExp, algorithm: config.refreshAlgo } )
 }
 
 function refreshTokens(token) {
   try {
     const decoded = jwt.decode(token, { algorithm: 'HS512'})
   
-    if (!decoded && !decoded.email) return null
+    if (!decoded && !decoded.uuid) return null
 
-    const accessToken = signAccessToken(decoded.email)
-    const refreshToken = signRefreshToken(decoded.email)
+    const accessToken = signAccessToken(decoded.uuid)
+    const refreshToken = signRefreshToken(decoded.uuid)
     
     return {
       accessToken,
